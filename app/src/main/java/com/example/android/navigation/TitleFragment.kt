@@ -1,30 +1,30 @@
 package com.example.android.navigation
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.example.android.navigation.databinding.FragmentTitleBinding
+import kotlinx.android.synthetic.main.fragment_title.*
 
 
-class TitleFragment : Fragment() {
+class TitleFragment : Fragment(R.layout.fragment_title) {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val binding = DataBindingUtil.inflate<FragmentTitleBinding>(inflater, R.layout.fragment_title, container, false)
-
-        binding.playButton.setOnClickListener { view ->
-            view.findNavController().navigate(R.id.action_titleFragment_to_gameFragment)
+        playButton.setOnClickListener {
+            it.findNavController().navigate(R.id.action_titleFragment_to_gameFragment)
         }
 
         setHasOptionsMenu(true)
 
-        return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.winner_menu, menu)
     }

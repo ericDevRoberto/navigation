@@ -17,16 +17,12 @@
 package com.example.android.navigation
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.example.android.navigation.databinding.FragmentGameBinding
+import kotlinx.android.synthetic.main.fragment_game.*
 
-class GameFragment : Fragment() {
+class GameFragment : Fragment(R.layout.fragment_game) {
     data class Question(
             val text: String,
             val answers: List<String>)
@@ -64,23 +60,17 @@ class GameFragment : Fragment() {
     private var questionIndex = 0
     private val numQuestions = Math.min((questions.size + 1) / 2, 3)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-
-        // Inflate the layout for this fragment
-        val binding = DataBindingUtil.inflate<FragmentGameBinding>(
-                inflater, R.layout.fragment_game, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Shuffles the questions and sets the question index to the first question.
         randomizeQuestions()
 
-        // Bind this fragment class to the layout
-        binding.game = this
+
 
         // Set the onClickListener for the submitButton
-        binding.submitButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
-        { view: View ->
-            val checkedId = binding.questionRadioGroup.checkedRadioButtonId
+        submitButton.setOnClickListener {
+            val checkedId = questionRadioGroup.checkedRadioButtonId
             // Do nothing if nothing is checked (id == -1)
             if (-1 != checkedId) {
                 var answerIndex = 0
@@ -97,16 +87,15 @@ class GameFragment : Fragment() {
                     if (questionIndex < numQuestions) {
                         currentQuestion = questions[questionIndex]
                         setQuestion()
-                        binding.invalidateAll()
                     } else {
-                        view.findNavController().navigate(R.id.gameWonFragment)
+                        it.findNavController().navigate(R.id.gameWonFragment)
                     }
                 } else {
-                    view.findNavController().navigate(R.id.gameOverFragment)
+                    it.findNavController().navigate(R.id.gameOverFragment)
                 }
             }
         }
-        return binding.root
+
     }
 
     // randomize the questions and set the first question
@@ -124,6 +113,12 @@ class GameFragment : Fragment() {
         answers = currentQuestion.answers.toMutableList()
         // and shuffle them
         answers.shuffle()
-        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_android_trivia_question, questionIndex + 1, numQuestions)
+
+        questionText.text = currentQuestion.text
+
+        firstAnswerRadioButton.text = answers[0]
+        secondAnswerRadioButton.text = answers[1]
+        thirdAnswerRadioButton.text = answers[2]
+        fourthAnswerRadioButton.text = answers[3]
     }
 }
